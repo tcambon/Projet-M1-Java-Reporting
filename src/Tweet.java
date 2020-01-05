@@ -13,7 +13,6 @@ public class Tweet {
         this.idUtilisateurRT = idUtilisateurRT;
     }
 
-    
     @Override
     public String toString() {
         return "Tweet{" +
@@ -28,14 +27,6 @@ public class Tweet {
     public boolean hasRetweet(){
         return idUtilisateurRT != null;
         }
-    
-    public String getnom() {
-    	return idUtilisateur;
-    }
-    
-    public String getutirt() {
-    	return idUtilisateurRT;
-    }
 
     }
 
