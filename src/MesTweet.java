@@ -6,6 +6,7 @@ public class MesTweet {
         mesTweet.creer();
         mesTweet.ouvrir();
         mesTweet.afficher();
+        mesTweet.nbTweet();
     }
 
     private void creer() {
@@ -20,6 +21,11 @@ public class MesTweet {
 
     private void afficher() {
         System.out.print(bt.afficher());
+    }
+
+    private void nbTweet(){
+        bt.getNbTweetMois();
+
     }
 
 

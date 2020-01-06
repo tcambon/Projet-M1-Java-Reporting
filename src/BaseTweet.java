@@ -1,14 +1,11 @@
 import java.io.*;
 import java.sql.Timestamp;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 
 public class BaseTweet {
 
     private ArrayList<Tweet> tweets;
+    private ArrayList<InfosTweet> infosTweets;
     private int nbTweet = 0;
     private Map<String, ArrayList<Tweet>> mapMois;
     private Map<String, ArrayList<Tweet>> mapJour;
@@ -16,6 +13,7 @@ public class BaseTweet {
 
     public void initialise() {
         tweets = new ArrayList<>();
+        infosTweets = new ArrayList<>();
         mapMois = new TreeMap<>();
         mapJour = new TreeMap<>();
         mapAnnee = new TreeMap<>();
@@ -32,6 +30,7 @@ public class BaseTweet {
             Tweet montweet;
             int lineNb = 1;
             int nbErr = 0;
+
 
 
             long initTime = System.currentTimeMillis();
@@ -146,6 +145,21 @@ public class BaseTweet {
             sb.append(ii + " " + tweets.get(ii).toString() + "\n");
         }
         return sb.toString();
+    }
+
+
+    public void getNbTweetMois(){
+        InfosTweet monInfo;
+        for (ArrayList<Tweet> at : mapMois.values()) {
+
+            int nbTweets=at.size();
+            //implemUsersPopulaires
+            ArrayList<String> utilisateurs = new ArrayList<String>();
+            utilisateurs.add("kevin");
+            utilisateurs.add("steven");
+            monInfo = new InfosTweet(at, nbTweets, utilisateurs);
+            infosTweets.add(monInfo);
+        }
     }
 
 
