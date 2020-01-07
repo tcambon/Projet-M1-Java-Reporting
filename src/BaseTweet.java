@@ -2,6 +2,9 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.*;
 
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
@@ -9,19 +12,29 @@ public class BaseTweet {
 
     private ArrayList<Tweet> tweets;
     private ArrayList<InfosTweet> infosTweets;
+    private  ArrayList<Tweet> listUti;
+    private  ArrayList<Tweet> listRT;
     private int nbTweet = 0;
+    private int JoursLim[][] = {{31,31,31,31,31,31,31,31,31,31,31,31,31}, {1,1,1,1,1,1,1,1,1,1,1,1,1}};;
     private Map<String, ArrayList<Tweet>> mapMois;
     private Map<String, ArrayList<Tweet>> mapJour;
     private Map<String, ArrayList<Tweet>> mapAnnee;
+    private Map<String, ArrayList<Tweet>> mapUtil;
+    private Map<String, ArrayList<Tweet>> mapRT;
     private int moisMin = 13;
     private int moisMax = -1;
-
+    private BarChart<String, Integer> barChartM;
+    
+    
+    
     public void initialise() {
         tweets = new ArrayList<>();
         infosTweets = new ArrayList<>();
         mapMois = new TreeMap<>();
         mapJour = new TreeMap<>();
         mapAnnee = new TreeMap<>();
+        mapUtil = new TreeMap<>();
+        mapRT = new TreeMap<>();
 
 
     }
@@ -29,7 +42,7 @@ public class BaseTweet {
 
     public void ouvrirCSV() {
         try {
-            FileReader fr = new FileReader("data/climat.txt");
+            FileReader fr = new FileReader("C:/Users/cedri/eclipse-workspace/data/climat.txt");
             BufferedReader br = new BufferedReader(fr);
             String line;
             Tweet montweet;
@@ -115,6 +128,9 @@ public class BaseTweet {
                     }
                     listJour.add(montweet);
                     mapJour.put(jourMoisAnnee, listJour);
+                    
+                    JoursLim[0][mois]=min(JoursLim[0][mois], jour);
+                    JoursLim[1][mois]=max(JoursLim[1][mois], jour);
                 }
 
                 if (annee!=null){
@@ -127,6 +143,25 @@ public class BaseTweet {
                     mapAnnee.put(String.valueOf(annee), listAnnee);
                 }
 
+                if (idUtilisateur!=null){
+                    // on initialise si l'array list n'est pas encore creee
+                    listUti = mapUtil.get(idUtilisateur);
+                    if (listUti == null){
+                        listUti = new ArrayList<>();
+                    }
+                    listUti.add(montweet);
+                    mapUtil.put(idUtilisateur, listUti);
+                }
+                
+                if (contenu!=null){
+                    // on initialise si l'array list n'est pas encore creee
+                    listRT = mapRT.get(contenu);
+                    if (listRT == null){
+                        listRT = new ArrayList<>();
+                    }
+                    listRT.add(montweet);
+                    mapRT.put(contenu, listRT);
+                }
 
 
                 lineNb++;
@@ -172,31 +207,80 @@ public class BaseTweet {
             infosTweets.add(monInfo);
         }
     }
+    
+    public void getNbTweetJour(){
+        InfosTweet monInfo;
+        for (Map.Entry<String, ArrayList<Tweet>> monMap : mapJour.entrySet()) {
+
+            String date= monMap.getKey();
+            int nbTweets=monMap.getValue().size();
+            //implemUsersPopulaires
+            ArrayList<String> utilisateurs = new ArrayList<String>();
+            utilisateurs.add("kevin");
+            utilisateurs.add("steven");
+            monInfo = new InfosTweet(date, monMap.getValue(), nbTweets, utilisateurs);
+            infosTweets.add(monInfo);
+        }
+    }
 
     public Object[] graphicNbTweet(){
         ArrayList<String> abscisse = new ArrayList<>();
         ArrayList<Integer> ordonne = new ArrayList<>();
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
 
-
-        for (int i = moisMin; i <= moisMax; i++) {
+       
+        
+     //   for (int i = moisMin; i <= moisMax; i++) {
+    //        String stri=String.valueOf(i);
+    //        if(i<10){
+    //            stri="0"+stri;
+     //       }
+    //        String stri1 = stri + "2019";
+            
+    //        for(int j = 0; j <= moisMax-moisMin; j++){
+    //            InfosTweet montweet = infosTweets.get(j);
+    //            System.out.print(montweet.getDate());
+    //            if(stri1.equals(montweet.getDate())){
+    //                ordonne.add(montweet.getNbTweets());
+        //            abscisse.add(stri+"-2019");
+      //              series.getData().add(new XYChart.Data<>(stri+"-2019", montweet.getNbTweets()));
+    //                break;
+  //              }
+//
+  //          }
+//        }
+        
+         int mois = 11; // REMPLACER PAR LE MOIS SELECTIONNE
+         
+        for (int i = JoursLim[0][mois]; i <= JoursLim[1][mois]; i++) {
             String stri=String.valueOf(i);
+            String strj=String.valueOf(mois);
             if(i<10){
                 stri="0"+stri;
             }
-            stri = stri + "2019";
-
-            for(int j = 0; j <= moisMax-moisMin; j++){
+            if(mois<10){
+                strj="0"+strj;
+            }
+            String stri1 = stri + strj + "2019";
+            
+            for(int j = 0; j <= JoursLim[1][mois]-JoursLim[0][mois]; j++){
                 InfosTweet montweet = infosTweets.get(j);
-                if(stri.equals(montweet.getDate())){
+                System.out.print(montweet.getDate());
+                if(stri1.equals(montweet.getDate())){
                     ordonne.add(montweet.getNbTweets());
-                    abscisse.add(stri);
+                    abscisse.add(stri+"-"+strj+"-2019");
+                    series.getData().add(new XYChart.Data<>(stri+"-"+strj+"-2019", montweet.getNbTweets()));
                     break;
                 }
 
             }
         }
-        return new Object[]{abscisse, ordonne};
+        
+        //barChartM.getData().add(series);
+        return new Object[]{abscisse, ordonne}; 
+        
     }
 
+    
 
 }

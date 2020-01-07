@@ -25,7 +25,7 @@ public class MesTweet {
     }
 
     private void nbTweet(){
-        bt.getNbTweetMois();
+        bt.getNbTweetJour();
 
     }
 
