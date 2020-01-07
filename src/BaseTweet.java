@@ -2,6 +2,9 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
+
 public class BaseTweet {
 
     private ArrayList<Tweet> tweets;
@@ -10,6 +13,8 @@ public class BaseTweet {
     private Map<String, ArrayList<Tweet>> mapMois;
     private Map<String, ArrayList<Tweet>> mapJour;
     private Map<String, ArrayList<Tweet>> mapAnnee;
+    private int moisMin = 13;
+    private int moisMax = -1;
 
     public void initialise() {
         tweets = new ArrayList<>();
@@ -30,6 +35,7 @@ public class BaseTweet {
             Tweet montweet;
             int lineNb = 1;
             int nbErr = 0;
+
 
 
 
@@ -94,6 +100,10 @@ public class BaseTweet {
                     }
                     listMois.add(montweet);
                     mapMois.put(MoisAnnee, listMois);
+
+                    moisMin=min(moisMin, mois);
+                    moisMax=max(moisMax,mois);
+
                 }
 
                 if (jour!=null){
@@ -150,16 +160,42 @@ public class BaseTweet {
 
     public void getNbTweetMois(){
         InfosTweet monInfo;
-        for (ArrayList<Tweet> at : mapMois.values()) {
+        for (Map.Entry<String, ArrayList<Tweet>> monMap : mapMois.entrySet()) {
 
-            int nbTweets=at.size();
+            String date= monMap.getKey();
+            int nbTweets=monMap.getValue().size();
             //implemUsersPopulaires
             ArrayList<String> utilisateurs = new ArrayList<String>();
             utilisateurs.add("kevin");
             utilisateurs.add("steven");
-            monInfo = new InfosTweet(at, nbTweets, utilisateurs);
+            monInfo = new InfosTweet(date, monMap.getValue(), nbTweets, utilisateurs);
             infosTweets.add(monInfo);
         }
+    }
+
+    public Object[] graphicNbTweet(){
+        ArrayList<String> abscisse = new ArrayList<>();
+        ArrayList<Integer> ordonne = new ArrayList<>();
+
+
+        for (int i = moisMin; i <= moisMax; i++) {
+            String stri=String.valueOf(i);
+            if(i<10){
+                stri="0"+stri;
+            }
+            stri = stri + "2019";
+
+            for(int j = 0; j <= moisMax-moisMin; j++){
+                InfosTweet montweet = infosTweets.get(j);
+                if(stri.equals(montweet.getDate())){
+                    ordonne.add(montweet.getNbTweets());
+                    abscisse.add(stri);
+                    break;
+                }
+
+            }
+        }
+        return new Object[]{abscisse, ordonne};
     }
 
 
