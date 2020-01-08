@@ -4,16 +4,17 @@ public class InfosTweet {
     private String date;
     private ArrayList<Tweet> tweets;
     private int nbTweets;
-    private ArrayList<String> utilisateurs;
 
 
-    public InfosTweet(String date, ArrayList<Tweet> tweets, int nbTweets, ArrayList<String> utilisateurs) {
+    public InfosTweet(String date, ArrayList<Tweet> tweets, int nbTweets) {
         this.date = date;
         this.tweets = tweets;
         this.nbTweets = nbTweets;
-        this.utilisateurs = utilisateurs;
     }
 
+    public ArrayList<Tweet> getTweets() {
+        return tweets;
+    }
     public String getDate() {
         return date;
     }

@@ -18,7 +18,7 @@ public class BaseTweet {
 
     public void initialise() {
         tweets = new ArrayList<>();
-        infosTweets = new ArrayList<>();
+        //infosTweets = new ArrayList<>();
         mapMois = new TreeMap<>();
         mapJour = new TreeMap<>();
         mapAnnee = new TreeMap<>();
@@ -87,9 +87,11 @@ public class BaseTweet {
                 montweet = new Tweet(idTweet, idUtilisateur, datePubli, contenu, idUtilisateurRT);
                 tweets.add(montweet);
                 String moisStr = null;
+                //on recupere ensuite les infos sur le mois
                 if (mois!=null){
                     moisStr=String.valueOf(mois);
                     if(mois<10){
+                        // on rajoute 0 devant le numero du mois si il est compris entre 1 et 9
                         moisStr="0"+moisStr;
                     }
                     String MoisAnnee = moisStr + String.valueOf(annee) ;
@@ -99,6 +101,8 @@ public class BaseTweet {
                         listMois = new ArrayList<>();
                     }
                     listMois.add(montweet);
+                    // on ajoute la string contenant le num du mois et l'annee en cle, et la liste des tweet
+                    // correspondant a ce mois en valeur
                     mapMois.put(MoisAnnee, listMois);
 
                     moisMin=min(moisMin, mois);
@@ -106,7 +110,7 @@ public class BaseTweet {
 
                 }
 
-                if (jour!=null){
+                /*if (jour!=null){
                     String jourMoisAnnee = String.valueOf(jour)+moisStr+ String.valueOf(annee);
                     // on initialise si l'array list n'est pas encore creee
                     ArrayList<Tweet> listJour = mapJour.get(jourMoisAnnee);
@@ -115,9 +119,9 @@ public class BaseTweet {
                     }
                     listJour.add(montweet);
                     mapJour.put(jourMoisAnnee, listJour);
-                }
+                } */
 
-                if (annee!=null){
+                /*if (annee!=null){
                     // on initialise si l'array list n'est pas encore creee
                     ArrayList<Tweet> listAnnee = mapJour.get(String.valueOf(annee));
                     if (listAnnee == null){
@@ -125,7 +129,7 @@ public class BaseTweet {
                     }
                     listAnnee.add(montweet);
                     mapAnnee.put(String.valueOf(annee), listAnnee);
-                }
+                } */
 
 
 
@@ -158,45 +162,103 @@ public class BaseTweet {
     }
 
 
-    public void getNbTweetMois(){
+    private ArrayList<InfosTweet> fonctionInfosTweets(Map<String, ArrayList<Tweet>> mapPeriode) {
+        infosTweets = new ArrayList<>();
+        // permet à partir d'un map sur une periode, de retourneer une arraylist qui contiendra les infos tweet
+        // sur cette periode
         InfosTweet monInfo;
-        for (Map.Entry<String, ArrayList<Tweet>> monMap : mapMois.entrySet()) {
-
-            String date= monMap.getKey();
-            int nbTweets=monMap.getValue().size();
-            //implemUsersPopulaires
-            ArrayList<String> utilisateurs = new ArrayList<String>();
-            utilisateurs.add("kevin");
-            utilisateurs.add("steven");
-            monInfo = new InfosTweet(date, monMap.getValue(), nbTweets, utilisateurs);
+        for (Map.Entry<String, ArrayList<Tweet>> monMap : mapPeriode.entrySet()) {
+            String date = monMap.getKey();
+            int nbTweets = monMap.getValue().size();
+            //penser a implem Users Populaires
+            monInfo = new InfosTweet(date, monMap.getValue(), nbTweets);
             infosTweets.add(monInfo);
         }
+        return infosTweets;
     }
 
-    public Object[] graphicNbTweet(){
+    private ArrayList<InfosTweet> infosTweetMois = new ArrayList<>();
+    public Object[] graphicNbTweetMois(){
+        infosTweetMois = fonctionInfosTweets(mapMois);
+
         ArrayList<String> abscisse = new ArrayList<>();
         ArrayList<Integer> ordonne = new ArrayList<>();
-
-
         for (int i = moisMin; i <= moisMax; i++) {
             String stri=String.valueOf(i);
             if(i<10){
                 stri="0"+stri;
             }
             stri = stri + "2019";
-
             for(int j = 0; j <= moisMax-moisMin; j++){
-                InfosTweet montweet = infosTweets.get(j);
+                InfosTweet montweet = infosTweetMois.get(j);
                 if(stri.equals(montweet.getDate())){
                     ordonne.add(montweet.getNbTweets());
                     abscisse.add(stri);
                     break;
                 }
-
             }
         }
         return new Object[]{abscisse, ordonne};
     }
+
+    private int jourMax= 1;
+    private int jourMin=31;
+    public void calcNbTweetJoursMois(){
+        // On cherche a recuperer les tweet de chacun des jours pour un mois donne
+        String strMois = "092019";
+        for (InfosTweet monMois : infosTweetMois){
+            // on cherche le mois correspondant
+            if (strMois.equals(monMois.getDate())){
+                // on segmente ensuite par jours
+
+                // pour cela on parcours tous les tweets de ce mois
+                for (Tweet montweet : monMois.getTweets()){
+                    String strJour = montweet.getJourPubli();
+                    if (jourMax< Integer.parseInt(strJour)){
+                        jourMax = Integer.parseInt(strJour);
+                    }
+                    if (jourMin> Integer.parseInt(strJour)){
+                        jourMin = Integer.parseInt(strJour);
+                    }
+                    // on initialise si l'array list du jour si elle n'est pas encore creee
+                    // mapJour est un Map<String, ArrayList<Tweet>> defini dans initialise()
+                    ArrayList<Tweet> listJour = mapJour.get(strJour);
+                    if (listJour == null){
+                        listJour = new ArrayList<>();
+                    }
+                    listJour.add(montweet);
+                    // on ajoute la string contenant le jour en cle, et la liste des tweet
+                    // correspondant a ce jour en valeur
+                    mapJour.put(strJour, listJour);
+                }
+                break;
+            }
+
+        }
+    }
+
+
+    public Object[] graphicNbTweetJoursMois(){
+        ArrayList<InfosTweet> infosTweetJourMois = fonctionInfosTweets(mapJour);
+        ArrayList<String> abscisse = new ArrayList<>();
+        ArrayList<Integer> ordonne = new ArrayList<>();
+        // i contient le numero de chacun des jours du mois
+        for (int i = 1; i <= jourMax; i++) {
+            String stri=String.valueOf(i);
+            // j contient l'index de infosTweetJourMois
+            for(int j = 0; j <= jourMax-jourMin; j++){
+                InfosTweet montweet = infosTweetJourMois.get(j);
+                if(stri.equals(montweet.getDate())){
+                    ordonne.add(montweet.getNbTweets());
+                    abscisse.add(stri);
+                    break;
+                }
+            }
+        }
+        return new Object[]{abscisse, ordonne};
+    }
+
+
 
 
 }

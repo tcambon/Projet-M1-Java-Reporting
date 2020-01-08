@@ -6,7 +6,6 @@ public class MesTweet {
         mesTweet.creer();
         mesTweet.ouvrir();
         mesTweet.afficher();
-        mesTweet.nbTweet();
         mesTweet.graphicNbTweet();
     }
 
@@ -24,15 +23,17 @@ public class MesTweet {
         System.out.print(bt.afficher());
     }
 
-    private void nbTweet(){
-        bt.getNbTweetMois();
 
-    }
 
     private void graphicNbTweet(){
-        Object[] obj = bt.graphicNbTweet();
-        System.out.print(obj[0]);
-        System.out.print(obj[1]);
+        Object[] obj1 = bt.graphicNbTweetMois();
+        bt.calcNbTweetJoursMois();
+        Object[] obj2 = bt.graphicNbTweetJoursMois();
+        System.out.print(obj1[0]);
+        System.out.print(obj1[1]);
+
+        System.out.print(obj2[0]);
+        System.out.print(obj2[1]);
 
         ;
     }
