@@ -4,8 +4,8 @@ public class InfosTweet implements Comparable< InfosTweet > {
     private String date;
     private ArrayList<Tweet> tweets;
     private int nbTweets;
-
-
+  
+  
     public InfosTweet(String date, ArrayList<Tweet> tweets, int nbTweets) {
         this.date = date;
         this.tweets = tweets;

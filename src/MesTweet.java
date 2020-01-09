@@ -25,10 +25,10 @@ public class MesTweet {
         System.out.print(bt.afficher());
     }
 
-
+  
 
     private void graphicNbTweet(){
-    	XYChart.Series<String, Integer> obj1 = bt.graphicNbTweetMois();
+    	XYChart.Series<String, Integer> obj1  = bt.graphicNbTweetMois();
         bt.calcNbTweetJoursMois();
         XYChart.Series<String, Integer> obj2 = bt.graphicNbTweetJoursMois();
         //System.out.print(obj1[0]);

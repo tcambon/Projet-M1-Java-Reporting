@@ -19,7 +19,7 @@ public class InfosUser {
     public String getDate() {
         return date;
     }
-    
+      
     public String getUser() {
         return user;
     }

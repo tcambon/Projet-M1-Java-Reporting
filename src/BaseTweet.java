@@ -387,7 +387,7 @@ public class BaseTweet {
         Collections.sort(infosTweetUsers);
         Collections.reverse(infosTweetUsers);
 
-
+    
         for (int i = 0; i < 10; i++){
             InfosTweet moninfo = infosTweetUsers.get(i);
             String idUser = moninfo.getDate();

@@ -109,7 +109,7 @@ public class AppTweetController {
 		 XAxeUM.getCategories().removeAll();
 		 barchartusermonth.getData().clear();
 		 XAxeUM.getCategories().clear();
-		 
+		   
 		 
 		 label21.setText("Nombre de RT par mois pour Users populaires en "+choiceboxUM.getSelectionModel().getSelectedItem().toString());
 		 
