@@ -45,11 +45,16 @@ public class BaseTweet {
     }
 
 
-    public void ouvrirCSV() {
+    public void ouvrirCSV(String theme) {
         try {
+        	FileReader fr = null;
+        	if (theme=="c") {
+            fr = new FileReader("C:/Users/cedri/eclipse-workspace/data/climat.txt");
+        	}
+        	if (theme=="f") {
+                fr = new FileReader("C:/Users/cedri/eclipse-workspace/data/Foot.txt");
+            	}
         	
-        	
-            FileReader fr = new FileReader("C:/Users/cedri/eclipse-workspace/data/climat.txt");
             BufferedReader br = new BufferedReader(fr);
             String line;
             Tweet montweet;
@@ -83,7 +88,13 @@ public class BaseTweet {
                 Integer mois = null;
                 Integer jour = null;
                 if (arrLine.length > 2) {
-                    datePubli = Timestamp.valueOf(arrLine[2]);
+                	 try {											//On vérifie qu'il y a bien un tweet sur la ligne
+                         datePubli = Timestamp.valueOf(arrLine[2]);
+                     } catch (Exception ex) {
+                         nbErr++;
+                         System.err.println("Invalid idTweet for line " + lineNb);		//Si ce n'est pas le cas, erreur
+                     }
+                    
                     // recuperation du jour, mois et annee
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(datePubli.getTime());
@@ -340,20 +351,52 @@ public class BaseTweet {
     }
 
 
-    private ArrayList<InfosUser> fonctionInfosUser(Map<String, ArrayList<Tweet>> mapPeriode) {
-        infosUser = new ArrayList<>();
-        // permet à partir d'un map sur une periode, de retourneer une arraylist qui contiendra les infos tweet
-        // sur cette periode
-        InfosUser monUser;
-        for (Map.Entry<String, ArrayList<Tweet>> monMap : mapPeriode.entrySet()) {
-            String date = monMap.getKey();
-            int nbTweets = monMap.getValue().size();
-            
-            //penser a implem Users Populaires
-            //monUser = new InfosUser(date, monMap.getValue(), nbTweets);
-            //infosUser.add(monUser);
+    public void utilisateursPopulaires(String strmonth) {
+        for (InfosTweet monMois : infosTweetMois) {
+        	String strMois = strmonth.replaceAll("[-]","");
+            // on cherche le mois correspondant
+            if (strMois.equals(monMois.getDate())) {
+                // on segmente ensuite par rt
+                // pour cela on parcours tous les tweets de ce mois
+                for (Tweet montweet : monMois.getTweets()) {
+                    String rtid = montweet.getIdUtilisateurRT();
+                    if(rtid != null){
+                    // mapRT est un Map<String, ArrayList<Tweet>> defini dans initialise()
+                    ArrayList<Tweet> listRT = mapRT.get(rtid);
+                    if (listRT == null) {
+                        listRT = new ArrayList<>();
+                    }
+                    listRT.add(montweet);
+                    // on ajoute la string contenant le jour en cle, et la liste des tweet
+                    // correspondant a ce jour en valeur
+                    mapRT.put(rtid, listRT);
+                    }
+                }
+                break;
+            }
         }
-        return infosUser;
     }
 
+    public XYChart.Series<String, Integer> graphicUtilisateursPopulaires(){
+        ArrayList<InfosTweet> infosTweetUsers = fonctionInfosTweets(mapRT);
+        XYChart.Series<String, Integer> series = new XYChart.Series<>();
+        
+        series.getData().clear();
+        abscisse.clear();
+        
+        Collections.sort(infosTweetUsers);
+        Collections.reverse(infosTweetUsers);
+
+
+        for (int i = 0; i < 10; i++){
+            InfosTweet moninfo = infosTweetUsers.get(i);
+            String idUser = moninfo.getDate();
+            int nbTweet = moninfo.getNbTweets();
+            System.out.println(nbTweet);
+            abscisse.add(idUser);
+            series.getData().add(new XYChart.Data<>(idUser, nbTweet));
+        }
+
+        return series;
+    }
 }

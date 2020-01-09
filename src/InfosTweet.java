@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class InfosTweet {
+public class InfosTweet implements Comparable< InfosTweet > {
     private String date;
     private ArrayList<Tweet> tweets;
     private int nbTweets;
@@ -20,6 +20,14 @@ public class InfosTweet {
     }
     public int getNbTweets() {
         return nbTweets;
+    }
+
+
+    @Override
+    public int compareTo(InfosTweet o) {
+        return String.valueOf(this.getNbTweets()).compareTo(String.valueOf(o.getNbTweets()));
+
+
     }
 
 
