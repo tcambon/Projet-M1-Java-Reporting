@@ -12,7 +12,7 @@ public class AppTweet extends Application {
 
 public void start(Stage primaryStage) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("projetM1.fxml"));
-    primaryStage.setTitle("Base de Tweet");
+    primaryStage.setTitle("Application analyse de Tweet");
     Scene scene = new Scene(root);
     primaryStage.setScene(scene);
     primaryStage.show();
