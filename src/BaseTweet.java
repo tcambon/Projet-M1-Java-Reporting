@@ -13,6 +13,7 @@ public class BaseTweet {
     private Map<String, ArrayList<Tweet>> mapMois;
     private Map<String, ArrayList<Tweet>> mapJour;
     private Map<String, ArrayList<Tweet>> mapAnnee;
+    private Map<String, ArrayList<Tweet>> mapRT;
     private int moisMin = 13;
     private int moisMax = -1;
 
@@ -22,6 +23,7 @@ public class BaseTweet {
         mapMois = new TreeMap<>();
         mapJour = new TreeMap<>();
         mapAnnee = new TreeMap<>();
+        mapRT = new TreeMap<>();
 
 
     }
@@ -110,29 +112,6 @@ public class BaseTweet {
 
                 }
 
-                /*if (jour!=null){
-                    String jourMoisAnnee = String.valueOf(jour)+moisStr+ String.valueOf(annee);
-                    // on initialise si l'array list n'est pas encore creee
-                    ArrayList<Tweet> listJour = mapJour.get(jourMoisAnnee);
-                    if (listJour == null){
-                        listJour = new ArrayList<>();
-                    }
-                    listJour.add(montweet);
-                    mapJour.put(jourMoisAnnee, listJour);
-                } */
-
-                /*if (annee!=null){
-                    // on initialise si l'array list n'est pas encore creee
-                    ArrayList<Tweet> listAnnee = mapJour.get(String.valueOf(annee));
-                    if (listAnnee == null){
-                        listAnnee = new ArrayList<>();
-                    }
-                    listAnnee.add(montweet);
-                    mapAnnee.put(String.valueOf(annee), listAnnee);
-                } */
-
-
-
                 lineNb++;
             }
             nbTweet = lineNb - nbErr;
@@ -203,7 +182,7 @@ public class BaseTweet {
 
     private int jourMax= 1;
     private int jourMin=31;
-    public void calcNbTweetJoursMois(){
+    public void TweetJoursMois(){
         // On cherche a recuperer les tweet de chacun des jours pour un mois donne
         String strMois = "092019";
         for (InfosTweet monMois : infosTweetMois){
@@ -238,6 +217,52 @@ public class BaseTweet {
     }
 
 
+    public void utilisateursPopulaires() {
+        for (InfosTweet monMois : infosTweetMois) {
+            String strMois = "092019";
+            // on cherche le mois correspondant
+            if (strMois.equals(monMois.getDate())) {
+                // on segmente ensuite par rt
+                // pour cela on parcours tous les tweets de ce mois
+                for (Tweet montweet : monMois.getTweets()) {
+                    String rtid = montweet.getIdUtilisateurRT();
+                    if(rtid != null){
+                    // mapRT est un Map<String, ArrayList<Tweet>> defini dans initialise()
+                    ArrayList<Tweet> listRT = mapRT.get(rtid);
+                    if (listRT == null) {
+                        listRT = new ArrayList<>();
+                    }
+                    listRT.add(montweet);
+                    // on ajoute la string contenant le jour en cle, et la liste des tweet
+                    // correspondant a ce jour en valeur
+                    mapRT.put(rtid, listRT);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public Object[] graphicUtilisateursPopulaires(){
+        ArrayList<InfosTweet> infosTweetUsers = fonctionInfosTweets(mapRT);
+        Collections.sort(infosTweetUsers);
+        Collections.reverse(infosTweetUsers);
+        ArrayList<String> abscisse = new ArrayList<>();
+        ArrayList<Integer> ordonne = new ArrayList<>();
+
+        for (int i = 0; i <= 10; i++){
+            InfosTweet moninfo = infosTweetUsers.get(i);
+            String idUser = moninfo.getDate();
+            int nbTweet = moninfo.getNbTweets();
+            abscisse.add(idUser);
+            ordonne.add(nbTweet);
+        }
+
+
+        return new Object[]{abscisse, ordonne};
+    }
+
+
     public Object[] graphicNbTweetJoursMois(){
         ArrayList<InfosTweet> infosTweetJourMois = fonctionInfosTweets(mapJour);
         ArrayList<String> abscisse = new ArrayList<>();
@@ -247,9 +272,9 @@ public class BaseTweet {
             String stri=String.valueOf(i);
             // j contient l'index de infosTweetJourMois
             for(int j = 0; j <= jourMax-jourMin; j++){
-                InfosTweet montweet = infosTweetJourMois.get(j);
-                if(stri.equals(montweet.getDate())){
-                    ordonne.add(montweet.getNbTweets());
+                InfosTweet monInfotweet = infosTweetJourMois.get(j);
+                if(stri.equals(monInfotweet.getDate())){
+                    ordonne.add(monInfotweet.getNbTweets());
                     abscisse.add(stri);
                     break;
                 }

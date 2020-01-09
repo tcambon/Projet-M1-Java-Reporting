@@ -43,26 +43,8 @@ public class Tweet {
         return String.valueOf(jour);
     }
 
-
-
-    public void setDatePubli(Timestamp datePubli) {
-        this.datePubli = datePubli;
-    }
-
-    public String getContenu() {
-        return contenu;
-    }
-
-    public void setContenu(String contenu) {
-        this.contenu = contenu;
-    }
-
     public String getIdUtilisateurRT() {
         return idUtilisateurRT;
-    }
-
-    public void setIdUtilisateurRT(String idUtilisateurRT) {
-        this.idUtilisateurRT = idUtilisateurRT;
     }
 
     @Override

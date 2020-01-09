@@ -27,13 +27,16 @@ public class MesTweet {
 
     private void graphicNbTweet(){
         Object[] obj1 = bt.graphicNbTweetMois();
-        bt.calcNbTweetJoursMois();
+        bt.TweetJoursMois();
         Object[] obj2 = bt.graphicNbTweetJoursMois();
         System.out.print(obj1[0]);
         System.out.print(obj1[1]);
 
         System.out.print(obj2[0]);
         System.out.print(obj2[1]);
+        bt.utilisateursPopulaires();
+        bt.graphicUtilisateursPopulaires();
+
 
         ;
     }
