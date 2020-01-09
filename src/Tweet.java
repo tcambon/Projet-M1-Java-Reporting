@@ -1,4 +1,5 @@
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 public class Tweet {
     private long idTweet;
@@ -34,6 +35,15 @@ public class Tweet {
     public Timestamp getDatePubli() {
         return datePubli;
     }
+
+    public String getJourPubli(){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(datePubli.getTime());
+        int jour = cal.get(Calendar.DAY_OF_MONTH);
+        return String.valueOf(jour);
+    }
+
+
 
     public void setDatePubli(Timestamp datePubli) {
         this.datePubli = datePubli;
@@ -71,7 +81,6 @@ public class Tweet {
         }
 
     }
-
 
 
 

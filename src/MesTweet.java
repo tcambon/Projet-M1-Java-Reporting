@@ -1,3 +1,5 @@
+import javafx.scene.chart.XYChart;
+
 public class MesTweet {
     private BaseTweet bt;
 
@@ -6,7 +8,6 @@ public class MesTweet {
         mesTweet.creer();
         mesTweet.ouvrir();
         mesTweet.afficher();
-        mesTweet.nbTweet();
         mesTweet.graphicNbTweet();
     }
 
@@ -24,15 +25,17 @@ public class MesTweet {
         System.out.print(bt.afficher());
     }
 
-    private void nbTweet(){
-        bt.getNbTweetJour();
 
-    }
 
     private void graphicNbTweet(){
-        Object[] obj = bt.graphicNbTweet();
-        System.out.print(obj[0]);
-        System.out.print(obj[1]);
+    	XYChart.Series<String, Integer> obj1 = bt.graphicNbTweetMois();
+        bt.calcNbTweetJoursMois();
+        XYChart.Series<String, Integer> obj2 = bt.graphicNbTweetJoursMois();
+        //System.out.print(obj1[0]);
+        //System.out.print(obj1[1]);
+
+        //System.out.print(obj2[0]);
+        //System.out.print(obj2[1]);
 
         ;
     }
