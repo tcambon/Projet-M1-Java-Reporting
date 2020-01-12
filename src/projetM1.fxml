@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="AppTweetController">
+  <tabs>
+      <Tab text="Choisir la base">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="button1" layoutX="344.0" layoutY="203.0" mnemonicParsing="false" onAction="#openc" text="Ouvrir la base climat" />
+                  <Button fx:id="button2" layoutX="130.0" layoutY="203.0" mnemonicParsing="false" onAction="#openf" prefHeight="25.0" prefWidth="125.0" text="Ouvrir la base foot" />
+                  <Label layoutX="74.0" layoutY="47.0" text="Bienvenue sur votre application de reporting ! ">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="193.0" layoutY="143.0" text="Quelle base voulez vous ouvrir ?">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="76.0" layoutY="121.0" prefHeight="21.0" prefWidth="448.0" text="Analyse des données venues de Twitter sur le football et le climat.">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+        </content>
+      </Tab>
+    <Tab text="Graph Tweets/mois">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <BarChart fx:id="barcharttweetmoth" layoutY="29.0" prefHeight="342.0" prefWidth="451.0">
+                    <xAxis>
+                      <CategoryAxis fx:id="XAxe" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="Yaxe" side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+                  <Label layoutX="30.0" layoutY="-2.0" prefHeight="31.0" prefWidth="391.0" text="Nombre de Tweets par mois dans la base">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Graph Tweets/jour">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <BarChart fx:id="barcharttweetday" layoutX="-8.0" layoutY="14.0" prefHeight="348.0" prefWidth="545.0">
+                    <xAxis>
+                      <CategoryAxis fx:id="XAxeday" side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+                  <ChoiceBox fx:id="choiceboxD" layoutX="530.0" layoutY="68.0" onAction="#changeBCD" prefHeight="25.0" prefWidth="64.0" />
+                  <Label fx:id="label2" layoutX="41.0" prefHeight="31.0" prefWidth="518.0" text="Nombre de Tweets par jour dans la base">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+      <Tab text="Graph Users/Mois">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <BarChart fx:id="barchartusermonth" layoutY="14.0" prefHeight="348.0" prefWidth="545.0">
+                     <xAxis>
+                        <CategoryAxis fx:id="XAxeUM" label="Identifiants en fonction de la popularité (Nombre de Retweet)" side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis side="LEFT" />
+                     </yAxis>
+                  </BarChart>
+                  <ChoiceBox fx:id="choiceboxUM" layoutX="536.0" layoutY="65.0" onAction="#changeBCUM" prefHeight="25.0" prefWidth="64.0" />
+                  <Label fx:id="label21" layoutX="41.0" prefHeight="31.0" prefWidth="518.0" text="Nombre de RT par mois pour Users populaires dans la base">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+        </content>
+      </Tab>
+  </tabs>
+</TabPane>
